@@ -1,0 +1,6 @@
+# File chứa biến môi trường
+.env
+
+# File biên dịch Python
+*.pyc
+__pycache__/

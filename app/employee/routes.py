@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from employee.models import (
+from app.employee.models import (
     fetch_all_employees, add_employee, update_employee, delete_employee
 )
 

@@ -1,7 +1,7 @@
 import jwt
 from flask import Blueprint, request, jsonify
 from app.user.models import register_user,login_user,change_password,delete_user
-from app.utils import create_access_token,create_refresh_token,current_app
+from app.utils import create_access_token,create_refresh_token,check_refresh_token,current_app
 
 user_bp = Blueprint('user', __name__)
 
@@ -22,6 +22,7 @@ def login():
     if login_user(user_data['username'], user_data['password']):
         access_token = create_access_token(user_data['username'])
         refresh_token = create_refresh_token(user_data['username'])
+        check_refresh_token(user_data['username'])
 
         return jsonify({
             "access_token": access_token,

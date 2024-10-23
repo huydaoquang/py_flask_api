@@ -10,6 +10,33 @@ def fetch_all_employees():
     conn.close()
     return records
 
+def fetch_employees(page, limit, search):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Tính toán chỉ số bắt đầu
+    start = (page - 1) * limit
+
+    # Truy vấn với LIMIT, OFFSET và tìm kiếm
+    query = """
+        SELECT * FROM employees 
+        WHERE name ILIKE %s 
+        ORDER BY id  -- Sắp xếp theo ID hoặc một trường khác nếu cần
+        LIMIT %s OFFSET %s;
+    """
+    cursor.execute(query, ('%' + search + '%', limit, start))
+    records = cursor.fetchall()
+
+    # Lấy tổng số bản ghi phù hợp với tìm kiếm
+    count_query = "SELECT COUNT(*) FROM employees WHERE name ILIKE %s;"
+    cursor.execute(count_query, ('%' + search + '%',))
+    total_records = cursor.fetchone()[0]
+
+    cursor.close()
+    conn.close()
+
+    return records, total_records
+
 def add_employee(name, salary):
     conn = get_db_connection()
     cursor = conn.cursor()

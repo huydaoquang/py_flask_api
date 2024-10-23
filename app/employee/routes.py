@@ -1,8 +1,8 @@
 from flask import Blueprint, request, jsonify
 from app.employee.models import (
-    fetch_all_employees, add_employee, update_employee, delete_employee
+    fetch_all_employees, add_employee, update_employee, delete_employee,fetch_employees
 )
-from app.utils import token_required,verify_token,create_access_token
+from app.utils import token_required
 
 employee_bp = Blueprint('employee', __name__)
 
@@ -11,6 +11,26 @@ employee_bp = Blueprint('employee', __name__)
 def get_employees():
     records = fetch_all_employees()
     return jsonify(records)
+
+@employee_bp.route('/employees-limit', methods=['GET'])
+@token_required
+def get_employees_limit():
+    # Lấy tham số truy vấn
+    page = request.args.get('page', default=1, type=int)
+    limit = request.args.get('limit', default=10, type=int)
+    search = request.args.get('search', default='', type=str)
+
+    records, total_records = fetch_employees(page, limit, search)
+
+    response = {
+        'page': page,
+        'limit': limit,
+        'total_records': total_records,
+        'total_pages': (total_records + limit - 1) // limit,
+        'employees': records
+    }
+
+    return jsonify(response)
 
 @employee_bp.route('/employees', methods=['POST'])
 @token_required

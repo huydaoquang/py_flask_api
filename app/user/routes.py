@@ -62,8 +62,10 @@ def refresh_token():
         payload = jwt.decode(refresh_token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
         username = payload['sub']
         new_access_token = create_access_token(username)
+        new_refresh_token = create_refresh_token(username)
         return jsonify({
             "access_token": new_access_token,
+            "refresh_token": new_refresh_token,
             "message": "Token refreshed successfully",
             "status": 200
         }), 200

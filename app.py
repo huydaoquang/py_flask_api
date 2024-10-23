@@ -1,7 +1,7 @@
 from flask import Flask
 from app.user.routes import user_bp
 from app.employee.routes import employee_bp
-from app.log.routes import logs_bp
+from app.logs.routes import logs_bp
 from app.config import Config
 
 app = Flask(__name__)

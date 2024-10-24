@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.log.models import insert_log
+from app.logs.models import insert_log
 
 logs_bp = Blueprint('logs', __name__)
 

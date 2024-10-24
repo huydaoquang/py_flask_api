@@ -56,3 +56,5 @@ def verify_token(token):
     except jwt.InvalidTokenError:
         return "invalid"
 
+def invalidate_refresh_token(username):
+    redis_client.delete(username)

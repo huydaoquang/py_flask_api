@@ -1,7 +1,11 @@
 import redis
 
 redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
+keys = redis_client.keys('*')
 
+# In ra danh sách khóa
+# redis_client.flushdb()
+print(keys)
 def check_refresh_token(username):
     # Lấy giá trị từ Redis
     token = redis_client.get(f'{username}')

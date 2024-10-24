@@ -1,7 +1,7 @@
 import jwt
 from flask import Blueprint, request, jsonify
 from app.user.models import register_user,login_user,change_password,delete_user
-from app.utils import create_access_token,create_refresh_token,check_refresh_token,current_app
+from app.utils import create_access_token,create_refresh_token,check_refresh_token,current_app,token_required,invalidate_refresh_token
 
 user_bp = Blueprint('user', __name__)
 
@@ -33,6 +33,7 @@ def login():
     return jsonify({"message": "Invalid credentials", "status": 401}), 401
 
 @user_bp.route('/change-password', methods=['POST'])
+@token_required 
 def change_password_route():
     try:
         user_data = request.json
@@ -45,6 +46,7 @@ def change_password_route():
         return jsonify({"error": "An error occurred: " + str(e)}), 500
     
 @user_bp.route('/delete-user', methods=['DELETE'])
+@token_required 
 def delete_user_route():
     try:
         user_data = request.json
@@ -56,6 +58,7 @@ def delete_user_route():
         return jsonify({"error": "An error occurred: " + str(e)}), 500
     
 @user_bp.route('/refresh-token', methods=['POST'])
+@token_required 
 def refresh_token():
     refresh_token = request.json.get('refresh_token')
     try:
@@ -73,3 +76,14 @@ def refresh_token():
         return jsonify({"message": "Refresh token has expired", "status": 401}), 401
     except jwt.InvalidTokenError:
         return jsonify({"message": "Invalid refresh token", "status": 401}), 401
+
+@user_bp.route('/logout', methods=['POST'])
+@token_required  
+def logout_user():
+    token = request.headers.get('Authorization').split(" ")[1]  
+    decoded_token = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
+    username = decoded_token['sub']  
+
+    invalidate_refresh_token(username)
+
+    return jsonify({'status': 'success', 'message': 'User logged out successfully.'}), 200

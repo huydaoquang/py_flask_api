@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác thực CAPTCHA</title>
+</head>
+<body>
+    <h1>Xác thực CAPTCHA</h1>
+    <img src="{{ captcha_image }}" alt="CAPTCHA">
+    <form method="POST" action="/verify">
+        <input type="text" name="captcha_input" required>
+        <button type="submit">Gửi</button>
+    </form>
+</body>
+</html>

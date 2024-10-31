@@ -70,7 +70,7 @@ def delete_user_route():
         return jsonify({"error": "An error occurred: " + str(e)}), 500
     
 @user_bp.route('/refresh-token', methods=['POST'])
-@token_required 
+# @token_required 
 def refresh_token():
     refresh_token = request.json.get('refresh_token')
     try:

@@ -8,7 +8,7 @@ from functools import wraps
 redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 def create_access_token(username):
-    expiration = datetime.datetime.utcnow() + datetime.timedelta(minutes=15)
+    expiration = datetime.datetime.utcnow() + datetime.timedelta(minutes=2)
     return jwt.encode({'sub': username, 'exp': expiration}, current_app.config['SECRET_KEY'], algorithm='HS256')
 
 def create_refresh_token(username):

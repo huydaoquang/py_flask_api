@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from typing import Any, List, Dict
 from app.employee.models import (
     fetch_all_employees, add_employee, update_employee, delete_employee,fetch_employees
 )
@@ -17,17 +18,26 @@ def get_employees():
 def get_employees_limit():
     # Lấy tham số truy vấn
     page = request.args.get('page', default=1, type=int)
-    limit = request.args.get('limit', default=10, type=int)
+    limit = request.args.get('limit', default=5, type=int)
     search = request.args.get('search', default='', type=str)
 
     records, total_records = fetch_employees(page, limit, search)
+
+    data: List[Dict[str, Any]] = []
+
+    for item in records:
+        data.append({
+            'id': item[0],   
+            'name': item[1],
+            'salary': item[2]
+        })
 
     response = {
         'page': page,
         'limit': limit,
         'total_records': total_records,
         'total_pages': (total_records + limit - 1) // limit,
-        'employees': records
+        'employees': data
     }
 
     return jsonify(response)

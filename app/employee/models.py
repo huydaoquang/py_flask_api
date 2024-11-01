@@ -1,4 +1,5 @@
 import psycopg2
+
 from db import get_db_connection
 
 def fetch_all_employees():
@@ -10,7 +11,7 @@ def fetch_all_employees():
     conn.close()
     return records
 
-def fetch_employees(page, limit, search):
+def fetch_employees(page: int, limit: int, search: str):
     conn = get_db_connection()
     cursor = conn.cursor()
 

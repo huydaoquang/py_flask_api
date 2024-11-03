@@ -10,20 +10,19 @@ def register():
     try:
         user_data = request.json
         user = register_user(user_data['username'], user_data['password'])
-        access_token = create_access_token(user_data['username'])
-        refresh_token = create_refresh_token(user_data['username'])
-        
+
         return jsonify({
-            "access_token": access_token,
-            "refresh_token": refresh_token,
             "user": user_data['username'],
             "message": "Registration successful",
-            "status": 200
+            "status": "success"
         }), 201
+
     except ValueError as e:
         return jsonify({"error": str(e)}), 400  # Bad Request
     except Exception as e:
+        print("An unexpected error occurred:", str(e))
         return jsonify({"error": "An error occurred: " + str(e)}), 500
+
 
 @user_bp.route('/login', methods=['POST'])
 def login():
